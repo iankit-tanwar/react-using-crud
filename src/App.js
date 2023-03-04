@@ -3,6 +3,15 @@ import { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
+
+
+
+
+
+
+
+
+
   //1 hook area
   //const[variable,setVariable]=useState(initailValue);
 
@@ -38,6 +47,41 @@ function App() {
 
 
   //2 function area
+  let sendData=()=>{
+    console.log(teachers)
+  }
+    let deleteTeacher=(e)=>{
+    let ans = window.confirm("Do you want delete");
+
+    let re = e.target.closest('tr');
+
+    console.log(e.target.closest('tr').querySelector('td:first-child').innerHTML) ;
+
+    let delid = e.target.closest('tr').querySelector('td:first-child').innerHTML ;
+
+
+    console.log( typeof ans);
+
+    if(ans === true)
+    {
+      fetch(`http://localhost:1337/api/teachers/${delid}`,
+     { method:"DELETE"}
+      )
+      .then((res)=>{return res.json();})
+      .then((data)=>{ 
+        re.remove(); 
+        console.log(data); 
+        window.alert('Deleted successfully')
+      
+      
+      })
+      .catch((err)=>{});
+    
+    }else{
+      console.log('not ok')
+
+    }
+  }
 
 
   //3 return statement
@@ -45,20 +89,14 @@ function App() {
     <>
       <div className='container mt-5 '>
         <form >
+          <h1>CREATE TEACHER</h1>
           <div className="mb-3 ">
-            <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
-            <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
-            <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
+            <label htmlFor="name" className="form-label">Teacher Name</label>
+            <input type="name" className="form-control" id="name" aria-describedby="name" />
+            
           </div>
-          <div className="mb-3">
-            <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
-            <input type="password" className="form-control" id="exampleInputPassword1" />
-          </div>
-          <div className="mb-3 form-check">
-            <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-            <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
-          </div>
-          <button type="submit" className="btn btn-primary">Submit</button>
+          
+          <button type="button" onClick={sendData} className="btn btn-primary">Submit</button>
         </form>
         <br />
         <hr />
@@ -70,6 +108,7 @@ function App() {
               <th scope="col">Name</th>
 
               <th scope="col">createdAt</th>
+              <th scope="col ">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -79,6 +118,9 @@ function App() {
                   <td >{cv.id}</td>
                   <td>{cv.name}</td>
                   <td>{cv.createdAt}</td>
+                  <td><button className='btn btn-success btn-sm ms-3'>view</button>
+                  <button className='btn btn-primary btn-sm ms-3'>edit</button>
+                  <button className='btn btn-danger btn-sm ms-3' onClick={(e)=>{deleteTeacher(e)}} >delete</button></td>
 
                 </tr>
               })
