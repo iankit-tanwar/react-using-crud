@@ -20,7 +20,22 @@ function App() {
     { id: 2, name: 'tanwar', createdAt: '1243784378345' }]);
 
 
-  console.log(teachers)
+
+
+    const[payload , setPayload]=useState({
+      "data": {
+        "name": "ankit tanwar"
+      }
+    });
+
+    const[teacherName, setTeacherName]=useState('');
+
+
+
+
+
+
+
 
 
   useEffect(() => {
@@ -32,13 +47,13 @@ function App() {
 
         let newobj = data.data.map((cv, idx, arr) => {
           return {
-              id: cv.id,
-              name: cv.attributes.name,
-              createdAt: cv.attributes.createdAt
+            id: cv.id,
+            name: cv.attributes.name,
+            createdAt: cv.attributes.createdAt
           }
-      
-      
-      })
+
+
+        })
         setTeachers(newobj);
 
       }).catch()
@@ -47,40 +62,88 @@ function App() {
 
 
   //2 function area
-  let sendData=()=>{
-    console.log(teachers)
-  }
-    let deleteTeacher=(e)=>{
+ 
+
+
+  let deleteTeacher = (e) => {
     let ans = window.confirm("Do you want delete");
 
     let re = e.target.closest('tr');
 
-    console.log(e.target.closest('tr').querySelector('td:first-child').innerHTML) ;
+    console.log(e.target.closest('tr').querySelector('td:first-child').innerHTML);
 
-    let delid = e.target.closest('tr').querySelector('td:first-child').innerHTML ;
+    let delid = e.target.closest('tr').querySelector('td:first-child').innerHTML;
 
 
-    console.log( typeof ans);
+    console.log(typeof ans);
 
-    if(ans === true)
-    {
+    if (ans === true) {
       fetch(`http://localhost:1337/api/teachers/${delid}`,
-     { method:"DELETE"}
+        { method: "DELETE" }
       )
-      .then((res)=>{return res.json();})
-      .then((data)=>{ 
-        re.remove(); 
-        console.log(data); 
-        window.alert('Deleted successfully')
-      
-      
-      })
-      .catch((err)=>{});
-    
-    }else{
+        .then((res) => { return res.json(); })
+        .then((data) => {
+          re.remove();
+          console.log(data);
+          window.alert('Deleted successfully')
+
+
+        })
+        .catch((err) => { });
+
+    } else {
       console.log('not ok')
 
     }
+  }
+  
+
+
+
+  //2.2 function area
+  let sendData=()=>{
+
+    fetch(`http://localhost:1337/api/teachers`,{
+      method: "POST",
+      headers: {
+        
+        'Content-Type': 'application/json'
+      },
+      
+      body: JSON.stringify(payload)
+    }).then((res)=>{
+      return res.json(payload);
+
+    }).then((data)=>{
+      console.log(data)
+      if(data){
+        alert('Teacher created successfully')
+      }
+
+    }).catch((err)=>{
+      console.log(err)
+
+
+    })
+
+
+
+
+  }
+
+  let changeValue = (e) => {
+    console.log(e.target.value)
+    setTeacherName(e.target.value)
+    console.log(teacherName)
+
+    setPayload({
+      ...payload,
+      data:{
+        name:document.querySelector("input#teachername").value
+      }
+  
+    });
+
   }
 
 
@@ -91,12 +154,12 @@ function App() {
         <form >
           <h1>CREATE TEACHER</h1>
           <div className="mb-3 ">
-            <label htmlFor="name" className="form-label">Teacher Name</label>
-            <input type="name" className="form-control" id="name" aria-describedby="name" />
-            
+            <label htmlFor="teachername" className="form-label">Teacher Name</label>
+            <input type="text" className="form-control" id="teachername" name='name' onChange={(e) => { changeValue(e) }} aria-describedby="name" />
+
           </div>
-          
-          <button type="button" onClick={sendData} className="btn btn-primary">Submit</button>
+
+          <button type="button" onClick={()=>{sendData()}} className="btn btn-primary">Submit</button>
         </form>
         <br />
         <hr />
@@ -119,8 +182,8 @@ function App() {
                   <td>{cv.name}</td>
                   <td>{cv.createdAt}</td>
                   <td><button className='btn btn-success btn-sm ms-3'>view</button>
-                  <button className='btn btn-primary btn-sm ms-3'>edit</button>
-                  <button className='btn btn-danger btn-sm ms-3' onClick={(e)=>{deleteTeacher(e)}} >delete</button></td>
+                    <button className='btn btn-primary btn-sm ms-3'>edit</button>
+                    <button className='btn btn-danger btn-sm ms-3' onClick={(e) => { deleteTeacher(e) }} >delete</button></td>
 
                 </tr>
               })
