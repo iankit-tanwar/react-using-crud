@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from 'react';
+
 import './App.css';
 
 function App() {
@@ -177,13 +178,13 @@ function App() {
           <tbody>
             {
               teachers.map((cv, idx, arr) => {
-                return <tr>
+                return <tr key={idx}>
                   <td >{cv.id}</td>
                   <td>{cv.name}</td>
                   <td>{cv.createdAt}</td>
-                  <td><button className='btn btn-success btn-sm ms-3'>view</button>
-                    <button className='btn btn-primary btn-sm ms-3'>edit</button>
-                    <button className='btn btn-danger btn-sm ms-3' onClick={(e) => { deleteTeacher(e) }} >delete</button></td>
+                  <td><button className='btn btn-success btn-sm ms-3'>View</button>
+                    <a href= {`/editTeacher? id=${cv.id} name=${cv.name}`} className='btn btn-primary btn-sm ms-3'>Edit</a>
+                    <button className='btn btn-danger btn-sm ms-3' onClick={(e) => { deleteTeacher(e) }} >Delete</button></td>
 
                 </tr>
               })
